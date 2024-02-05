@@ -65,12 +65,25 @@ func Run(ctx context.Context, after, before, outputDir string) error {
 	receiptURLs := []string{}
 	gerURLProgressBar := progressbar.Default(int64(len(targetDate)))
 	for _, date := range targetDate {
-		// TODO: 決済履歴ページのページネーションに対応する、現状は1ページ目のみ見ている
-		urls, err := GetReceiptURLs(ctx, date, 1)
-		if err != nil {
-			return err
+
+		// 対象月の領収書を1ページ目から取得する
+		page := 1
+		for {
+			urls, err := GetReceiptURLs(ctx, date, page)
+			if err != nil {
+				return err
+			}
+
+			if len(urls) == 0 {
+				// そのページが存在しなくてもURLにはアクセスできるが、領収書が存在しないページになる
+				// 取得できたURLが0件になった場合、その月の領収書URLは全て取得しているはずなのでループを抜け次の月へ進める
+				break
+			}
+
+			receiptURLs = append(receiptURLs, urls...)
+			page++
 		}
-		receiptURLs = append(receiptURLs, urls...)
+
 		gerURLProgressBar.Add(1)
 	}
 
@@ -156,7 +169,6 @@ func GetReceiptURLs(ctx context.Context, date string, page int) ([]string, error
 	); err != nil {
 		return nil, fmt.Errorf("failed to fetch receipt URLs: %w", err)
 	}
-
 	return receiptURLs, nil
 }
 
@@ -192,8 +204,12 @@ func DownloadReceipt(ctx context.Context, receiptURL string, outputDir string) e
 	pdfPath := filepath.Join(outputDir, fileName)
 
 	// ディレクトリがなければ作成する
-	if err := os.MkdirAll(outputDir, 0o755); err != nil {
-		return fmt.Errorf("出力先ディレクトリの作成に失敗しました: %w", err)
+	// ディレクトリの有無をチェック
+	if _, err := os.Stat(filepath.Dir(pdfPath)); os.IsNotExist(err) {
+		// ディレクトリがなければ作成
+		if err := os.MkdirAll(outputDir, 0o755); err != nil {
+			return fmt.Errorf("出力先ディレクトリの作成に失敗しました: %w", err)
+		}
 	}
 
 	if err := os.WriteFile(pdfPath, pdfBuf, 0o644); err != nil {
