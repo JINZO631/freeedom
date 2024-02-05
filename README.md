@@ -1,2 +1,3 @@
 # freeedom
-https://www.gundam-seed.net/freedom/
+
+<https://www.gundam-seed.net/freedom/>

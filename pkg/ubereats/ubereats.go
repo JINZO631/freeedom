@@ -22,10 +22,10 @@ import (
 )
 
 // Run GmailからUberEatsの領収書のメールを探してダウンロードする
-func Run(ctx context.Context, oauthClientCredentialsJSONPath, afterDate, beforeDate string) error {
+func Run(ctx context.Context, oauthClientJSONPath, afterDate, beforeDate string) error {
 
 	// Gmailの設定を取得
-	b, err := os.ReadFile(oauthClientCredentialsJSONPath)
+	b, err := os.ReadFile(oauthClientJSONPath)
 	if err != nil {
 		return err
 	}
