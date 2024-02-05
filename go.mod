@@ -3,12 +3,12 @@ module github.com/JINZO631/freeedom
 go 1.21.3
 
 require (
+	github.com/chromedp/cdproto v0.0.0-20240127002248-bd7a66284627
 	github.com/spf13/cobra v1.8.0
 	google.golang.org/api v0.161.0
 )
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20240127002248-bd7a66284627 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
@@ -47,7 +47,7 @@ require (
 	golang.org/x/net v0.20.0
 	golang.org/x/oauth2 v0.16.0
 	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/term v0.16.0
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240116215550-a9fa1716bcac // indirect
